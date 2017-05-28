@@ -1,0 +1,57 @@
+mydata <- read.delim(file.choose(),header=T)
+
+###Multivariate Normal Distribution Tests
+#MardiaTest
+library(MVN)
+result<-mardiaTest(mydata, qqplot=TRUE)
+result
+
+#Royston test
+library(MVN)
+roystonTest(mydata)
+
+#Henze-Zirkler Test
+library(mvnTest)
+result<-HZ.test(mydata, qqplot=TRUE)
+result
+
+
+
+
+###Descriptive analysis of variables
+#Identification of the variables used in factor analysis
+#Descriptive analysis for each variable
+summary(mydata)
+
+###Correlation between variables
+#If your variables are ordinal, should use spearman correlation 
+correlation<-cor(mydata,method="spearman")
+correlation
+
+#####Corrplot
+library(corrplot)
+corrplot(cor(mydata), order="hclust", tl.col='black', tl.cex=.50)
+
+
+###Bartlett Sphericity Test
+library(psych)
+cortest.bartlett(correlation,n=nrow(mydata))
+
+###KMO Measure
+library(psych)
+KMO(correlation)
+
+library(psych)
+eigen(correlation)
+
+###Scree plot criterion
+library(nFactors)
+scree(correlation,hline=-1) #hline=-1 draw a horizontal line at -1
+
+##Explained Variance
+pc<-prcomp(mydata,scale.=F)
+summary(pc)
+
+#Principal Component Method
+library(psych)
+principal(correlation,nfactors=3,rotate="none")
